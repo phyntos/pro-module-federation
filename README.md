@@ -45,6 +45,24 @@ const { devDependencies } = packageJson;
 ...
 ```
 
+### index.tsx
+```js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { ProMFProvider } from '../pro-module-federation';
+import App from './App';
+
+const element = document.getElementById('root');
+
+ReactDOM.render(
+    <ProMFProvider>
+        <App />
+    </ProMFProvider>,
+    element,
+);
+
+```
+
 ### SomeComponent.tsx
 ```js
 ...
