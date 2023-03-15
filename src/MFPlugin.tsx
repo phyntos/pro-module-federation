@@ -1,23 +1,17 @@
-type RemoteType<
-    RemoteModules extends Record<RemoteName, string>,
-    RemoteName extends string,
-    RemoteEnvs extends Record<string, string>,
-> = {
+type RemoteType<RemoteName extends string, RemoteEnvs extends Record<string, string>> = {
     name: RemoteName;
-    modules: RemoteModules[RemoteName][];
     urls: RemoteEnvs;
     entry: string;
 };
 
 type Options<
-    RemoteModules extends Record<RemoteName, string>,
     RemoteEnvs extends Record<string, string>,
     RemoteName extends string,
     Dependencies extends Record<string, string>,
 > = {
     name: string;
     filename: string;
-    remotes: RemoteType<RemoteModules, RemoteName, RemoteEnvs>[];
+    remotes: RemoteType<RemoteName, RemoteEnvs>[];
     remoteConfigs: Record<RemoteName, Extract<keyof RemoteEnvs, string>>;
     dependencies: Dependencies;
     shared: (keyof Dependencies)[];
@@ -35,7 +29,6 @@ declare global {
             /* @ts-ignore */
             ProMFRemotes: {
                 entry: string;
-                modules: string[];
                 name: string;
                 url: string;
             }[];
@@ -44,12 +37,11 @@ declare global {
 }
 
 const MFPlugin = <
-    RemoteModules extends Record<RemoteName, string>,
     RemoteEnvs extends Record<string, string>,
     RemoteName extends string,
     Dependencies extends Record<string, string>,
 >(
-    options: Options<RemoteModules, RemoteEnvs, RemoteName, Dependencies> & {
+    options: Options<RemoteEnvs, RemoteName, Dependencies> & {
         plugins: {
             ModuleFederationPlugin: new (options: Record<string, any>) => any;
             EnvironmentPlugin: new (definitions: Record<string, any>) => any;

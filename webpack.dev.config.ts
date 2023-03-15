@@ -26,24 +26,14 @@ const config: Configuration = {
             remotes: [
                 {
                     name: 'TestApp',
-                    modules: ['./TestApp'],
                     urls: {
                         LOCAL: 'http://localhost:3000/',
                     },
                     entry: 'testApp.js',
                 },
-                {
-                    name: 'UEODeliveryOrderApp',
-                    modules: ['./UEODeliveryOrderApp'],
-                    urls: {
-                        LOCAL: 'http://localhost:3202/',
-                    },
-                    entry: 'ueoDeliveryOrderApp.js',
-                },
             ],
             remoteConfigs: {
                 TestApp: 'LOCAL',
-                UEODeliveryOrderApp: 'LOCAL',
             },
             plugins: {
                 EnvironmentPlugin,
