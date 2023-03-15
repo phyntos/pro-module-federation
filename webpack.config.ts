@@ -22,7 +22,7 @@ const config: webpack.Configuration = {
         path: path.resolve(__dirname, 'dist'),
         filename: 'pro-module-federation.js',
         library: {
-            name: ['ProMFPlugin', 'ProMFComponent', 'ProMFProvider'],
+            name: 'ProMF',
             type: 'umd',
         },
         clean: true,

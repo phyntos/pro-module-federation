@@ -2,7 +2,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { Configuration as WebpackConfiguration, container, EnvironmentPlugin } from 'webpack';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 import packageJson from './package.json';
-import { ProMFPlugin } from './src/pro-module-federation';
+import { ProMF } from './src/pro-module-federation';
 const { devDependencies } = packageJson;
 
 interface Configuration extends WebpackConfiguration {
@@ -18,7 +18,7 @@ const config: Configuration = {
         new HtmlWebpackPlugin({
             template: './public/index.html',
         }),
-        ProMFPlugin({
+        ProMF.Plugin({
             filename: 'devTest.js',
             name: 'DevTest',
             dependencies: devDependencies,
