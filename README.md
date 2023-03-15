@@ -11,14 +11,13 @@ npm install pro-module-federation
 ### webpack.config.ts
 ```js
 ...
+import { container, EnvironmentPlugin } from 'webpack';
 import packageJson from './package.json';
-import { ProMFPlugin } from './src/pro-module-federation';
+import { ProMFPlugin } from 'pro-module-federation';
 const { devDependencies } = packageJson;
 ...
     plugins: [
-        new HtmlWebpackPlugin({
-            template: './public/index.html',
-        }),
+        ...
         ProMFPlugin({
             filename: 'devTest.js',
             name: 'DevTest',
@@ -36,7 +35,6 @@ const { devDependencies } = packageJson;
             ],
             remoteConfigs: {
                 TestApp: 'LOCAL',
-                UEODeliveryOrderApp: 'LOCAL',
             },
             plugins: {
                 EnvironmentPlugin,
