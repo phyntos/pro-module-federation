@@ -26,6 +26,7 @@ const config: webpack.Configuration = {
             type: 'umd',
         },
         clean: true,
+        globalObject: 'this',
         umdNamedDefine: true,
     },
     externals: {
