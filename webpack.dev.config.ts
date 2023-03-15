@@ -1,6 +1,9 @@
-import path from 'path';
-import { Configuration as WebpackConfiguration } from 'webpack';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { Configuration as WebpackConfiguration, container, EnvironmentPlugin } from 'webpack';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
+import packageJson from './package.json';
+import { ProMFPlugin } from './src/pro-module-federation';
+const { devDependencies } = packageJson;
 
 interface Configuration extends WebpackConfiguration {
     devServer?: WebpackDevServerConfiguration;
@@ -11,6 +14,43 @@ const config: Configuration = {
     entry: './src/dev/index.tsx',
     devtool: 'inline-source-map',
     mode: 'development',
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './public/index.html',
+        }),
+        ProMFPlugin({
+            filename: 'devTest.js',
+            name: 'DevTest',
+            dependencies: devDependencies,
+            shared: ['react', 'react-dom'],
+            remotes: [
+                {
+                    name: 'TestApp',
+                    modules: ['./TestApp'],
+                    urls: {
+                        LOCAL: 'http://localhost:3000/',
+                    },
+                    entry: 'testApp.js',
+                },
+                {
+                    name: 'UEODeliveryOrderApp',
+                    modules: ['./UEODeliveryOrderApp'],
+                    urls: {
+                        LOCAL: 'http://localhost:3202/',
+                    },
+                    entry: 'ueoDeliveryOrderApp.js',
+                },
+            ],
+            remoteConfigs: {
+                TestApp: 'LOCAL',
+                UEODeliveryOrderApp: 'LOCAL',
+            },
+            plugins: {
+                EnvironmentPlugin,
+                ModuleFederationPlugin: container.ModuleFederationPlugin,
+            },
+        }),
+    ],
     module: {
         rules: [
             {
@@ -25,15 +65,40 @@ const config: Configuration = {
         fallback: {
             process: false,
         },
+        // fallback: {
+        //     util: false,
+        //     url: false,
+        //     path: false,
+        //     stream: false,
+        //     process: false,
+        //     crypto: false,
+        //     zlib: false,
+        //     buffer: false,
+        //     https: false,
+        //     http: false,
+        //     vm: false,
+        //     fs: false,
+        //     os: false,
+        //     querystring: false,
+        //     module: false,
+        //     esbuild: false,
+        //     'uglify-js': false,
+        //     '@swc/core': false,
+        //     worker_threads: false,
+        //     constants: false,
+        //     assert: false,
+        //     child_process: false,
+        // },
     },
     output: {
-        path: path.resolve(__dirname, 'build'),
-        filename: 'main.js',
-        clean: true,
+        filename: '[name].js',
+        publicPath: '/',
     },
     devServer: {
+        historyApiFallback: true,
         port: 4002,
         hot: true,
+        open: true,
     },
 };
 

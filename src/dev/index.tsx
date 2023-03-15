@@ -1,6 +1,3 @@
-import ReactDOM from 'react-dom';
-import React from 'react';
+import('./bootstrap');
 
-const element = document.getElementById('root');
-
-ReactDOM.render(<div></div>, element);
+export {};

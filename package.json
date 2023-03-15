@@ -1,9 +1,9 @@
 {
-    "name": "webpack-react-module-federation",
-    "version": "0.1.21",
-    "description": "Pro Tabulator",
-    "main": "./dist/webpack-react-module-federation.js",
-    "types": "./dist/webpack-react-module-federation.d.ts",
+    "name": "pro-module-federation",
+    "version": "0.0.1",
+    "description": "Webpack ProModuleFederation",
+    "main": "./dist/pro-module-federation.js",
+    "types": "./dist/pro-module-federation.d.ts",
     "files": [
         "dist"
     ],
@@ -16,7 +16,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/phyntos/webpack-react-module-federation.git"
+        "url": "git+https://github.com/phyntos/pro-module-federation.git"
     },
     "keywords": [],
     "author": "Yeldos Bakytzhan",
@@ -32,9 +32,11 @@
         "eslint-plugin-prettier": "^4.2.1",
         "eslint-plugin-react": "^7.31.11",
         "eslint-plugin-react-hooks": "^4.6.0",
+        "html-webpack-plugin": "^5.5.0",
         "prettier": "^2.8.2",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
+        "react-router-dom": "^6.4.3",
         "terser-webpack-plugin": "^5.3.6",
         "ts-loader": "^9.4.2",
         "ts-node": "^10.9.1",

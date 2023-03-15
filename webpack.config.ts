@@ -4,7 +4,7 @@ import webpack from 'webpack';
 
 const config: webpack.Configuration = {
     target: 'web',
-    entry: './src/webpack-react-module-federation.ts',
+    entry: './src/pro-module-federation.ts',
     mode: 'production',
     module: {
         rules: [
@@ -20,9 +20,9 @@ const config: webpack.Configuration = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'webpack-react-module-federation.js',
+        filename: 'pro-module-federation.js',
         library: {
-            name: 'ProTabulator',
+            name: 'ReactModuleFederation',
             type: 'umd',
         },
         clean: true,
