@@ -8,7 +8,7 @@ npm install pro-module-federation
 
 ## Usage
 
-# webpack.config.ts
+### webpack.config.ts
 ```js
 ...
 import packageJson from './package.json';
@@ -47,7 +47,7 @@ const { devDependencies } = packageJson;
 ...
 ```
 
-# SomeComponent.tsx
+### SomeComponent.tsx
 ```js
 ...
 import { ProMFComponent } from 'pro-module-federation';
