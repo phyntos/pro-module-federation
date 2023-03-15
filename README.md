@@ -1,49 +1,60 @@
-# pro-tabulator
-
-Tabulator based on [@ant-design/pro-table](https://www.npmjs.com/package/@ant-design/pro-table).
+# pro-module-federation
 
 ## Install
 
 ```
-npm install pro-tabulator
+npm install pro-module-federation
 ```
 
 ## Usage
 
+# webpack.config.ts
 ```js
-<ProTabulator<DataType, ParamsType>
-    tabulatorID='tabulatorID'
-    request={(params) => {
-        return {
-            data: [{ id: 1, name: 'Name', date: '2022-09-15T09:37', type: '1' }],
-            success: true,
-            total: 1,
-        };
-    }}
-    columns={[
-        {
-            dataIndex: 'name',
-            title: 'Name',
-            search: { type: 'text' },
-        },
-        {
-            dataIndex: 'date',
-            title: 'Date',
-            search: { type: 'dateRange' },
-        },
-        {
-            dataIndex: 'type',
-            title: 'Type',
-            search: {
-                type: 'select',
-                options: [
-                    { label: 'First', value: '1' },
-                    { label: 'Second', value: '2' },
-                ],
-                renderOption: true,
+...
+import packageJson from './package.json';
+import { ProMFPlugin } from './src/pro-module-federation';
+const { devDependencies } = packageJson;
+...
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './public/index.html',
+        }),
+        ProMFPlugin({
+            filename: 'devTest.js',
+            name: 'DevTest',
+            dependencies: devDependencies,
+            shared: ['react', 'react-dom'],
+            remotes: [
+                {
+                    name: 'TestApp',
+                    modules: ['./TestApp'],
+                    urls: {
+                        LOCAL: 'http://localhost:3000/',
+                    },
+                    entry: 'testApp.js',
+                },
+            ],
+            remoteConfigs: {
+                TestApp: 'LOCAL',
+                UEODeliveryOrderApp: 'LOCAL',
             },
-        },
-    ]}
-    rowKey='id'
-/>
+            plugins: {
+                EnvironmentPlugin,
+                ModuleFederationPlugin: container.ModuleFederationPlugin,
+            },
+        }),
+    ],
+...
+```
+
+# SomeComponent.tsx
+```js
+...
+import { ProMFComponent } from 'pro-module-federation';
+...
+    <ProMFComponent
+        scope='TestApp'
+        module='./TestApp'
+    />
+...
 ```
