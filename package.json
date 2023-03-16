@@ -1,6 +1,6 @@
 {
     "name": "pro-module-federation",
-    "version": "0.0.10",
+    "version": "0.0.11",
     "description": "Webpack ProModuleFederation",
     "main": "./dist/pro-module-federation.js",
     "types": "./dist/pro-module-federation.d.ts",
