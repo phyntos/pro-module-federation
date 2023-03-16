@@ -34,8 +34,18 @@ const config: webpack.Configuration = {
         umdNamedDefine: true,
     },
     externals: {
-        react: 'react',
-        'react-dom': 'react-dom',
+        react: {
+            commonjs: 'react',
+            commonjs2: 'react',
+            amd: 'react',
+            root: 'React',
+        },
+        'react-dom': {
+            commonjs: 'react-dom',
+            commonjs2: 'react-dom',
+            amd: 'react-dom',
+            root: 'ReactDOM',
+        },
     },
     optimization: {
         minimize: true,
