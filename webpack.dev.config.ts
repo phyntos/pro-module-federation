@@ -2,8 +2,8 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { Configuration as WebpackConfiguration, container, EnvironmentPlugin } from 'webpack';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
 import packageJson from './package.json';
-import { ProMFPlugin } from './src/pro-module-federation';
 const { devDependencies } = packageJson;
+import { ProMFPlugin } from './src/plugin';
 
 interface Configuration extends WebpackConfiguration {
     devServer?: WebpackDevServerConfiguration;

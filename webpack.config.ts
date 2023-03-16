@@ -4,7 +4,7 @@ import webpack from 'webpack';
 
 const config: webpack.Configuration = {
     target: 'web',
-    entry: './src/pro-module-federation.ts',
+    entry: { index: './src/pro-module-federation.ts', plugin: './src/plugin/index.ts' },
     mode: 'production',
     module: {
         rules: [
@@ -20,7 +20,11 @@ const config: webpack.Configuration = {
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'pro-module-federation.js',
+        filename: (pathData) => {
+            if (pathData.chunk?.name === 'index') return 'pro-module-federation.js';
+            if (pathData.chunk?.name === 'plugin') return 'plugin/index.js';
+            return '[name].js';
+        },
         library: {
             name: 'ProMF',
             type: 'umd',

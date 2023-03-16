@@ -36,7 +36,7 @@ declare global {
     }
 }
 
-const MFPlugin = <
+export const ProMFPlugin = <
     RemoteEnvs extends Record<string, string>,
     RemoteName extends string,
     Dependencies extends Record<string, string>,
@@ -74,10 +74,8 @@ const MFPlugin = <
         })),
     });
 
-    return <Compiler,>(compiler: Compiler) => {
+    return <Compiler>(compiler: Compiler) => {
         mf.apply(compiler);
         provide.apply(compiler);
     };
 };
-
-export default MFPlugin;
