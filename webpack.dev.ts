@@ -1,9 +1,8 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { Configuration as WebpackConfiguration, container, EnvironmentPlugin } from 'webpack';
 import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
-import packageJson from './package.json';
-const { devDependencies } = packageJson;
-import { ProMFPlugin } from './src/plugin';
+import { ProMFEnvironment, ProMFOptions } from './webpack.module';
+const { ModuleFederationPlugin } = container;
 
 interface Configuration extends WebpackConfiguration {
     devServer?: WebpackDevServerConfiguration;
@@ -18,28 +17,8 @@ const config: Configuration = {
         new HtmlWebpackPlugin({
             template: './public/index.html',
         }),
-        ProMFPlugin({
-            filename: 'devTest.js',
-            name: 'DevTest',
-            dependencies: devDependencies,
-            shared: ['react', 'react-dom'],
-            remotes: [
-                {
-                    name: 'TestApp',
-                    urls: {
-                        LOCAL: 'http://localhost:3000/',
-                    },
-                    entry: 'testApp.js',
-                },
-            ],
-            remoteConfigs: {
-                TestApp: 'LOCAL',
-            },
-            plugins: {
-                EnvironmentPlugin,
-                ModuleFederationPlugin: container.ModuleFederationPlugin,
-            },
-        }),
+        new ModuleFederationPlugin(ProMFOptions),
+        new EnvironmentPlugin(ProMFEnvironment),
     ],
     module: {
         rules: [
