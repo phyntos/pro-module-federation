@@ -1,11 +1,5 @@
-import Plugin from './MFPlugin';
-import Provider from './components/MFProvider';
-import Component from './components/MFComponent';
+import ProMFPlugin from './MFPlugin';
+import ProMFProvider from './components/MFProvider';
+import ProMFComponent from './components/MFComponent';
 
-const ProMF = {
-    Plugin,
-    Provider,
-    Component,
-};
-
-export { ProMF };
+export { ProMFPlugin, ProMFProvider, ProMFComponent };

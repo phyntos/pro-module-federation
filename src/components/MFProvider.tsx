@@ -12,7 +12,7 @@ const ModuleFederationContext = React.createContext<{
     },
 });
 
-const MFProvider: React.FC = ({ children }) => {
+const MFProvider = ({ children }: { children: React.ReactNode }) => {
     const [status, setStatus] = useState<Record<string, LazyStatus>>({});
 
     return (

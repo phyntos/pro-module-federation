@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { ProMF } from '../pro-module-federation';
+import { ProMFProvider } from '../pro-module-federation';
 import { DevApp } from './DevApp';
 
 const element = document.getElementById('root');
 
 ReactDOM.render(
-    <ProMF.Provider>
+    <ProMFProvider>
         <BrowserRouter>
             <DevApp />
         </BrowserRouter>
-    </ProMF.Provider>,
+    </ProMFProvider>,
     element,
 );
