@@ -28,7 +28,6 @@ const useComponent = ({ scope, module }: { scope: string; module: string }) => {
 
                 const factory = await container.get(module);
 
-                console.log(factory);
                 const Module = factory();
                 return Module;
             } catch (error) {
