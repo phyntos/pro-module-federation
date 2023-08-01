@@ -74,10 +74,10 @@ ReactDOM.render(
 
 ### MFComponent.tsx
 ```js
-import { ProMFComponent } from 'pro-module-federation';
+import { ProMFComponent, getProMF } from 'pro-module-federation';
 import { MFComponentProps } from 'pro-module-federation/dist/components/MFComponent';
 import React from 'react';
-import { ShareScopes } from 'pro-module-federation/dist/hooks/useComponent';
+import { ShareScopes } from 'pro-module-federation/dist/functions/getModule';
 
 declare const __webpack_init_sharing__: (shareScope: string) => Promise<void>;
 declare const __webpack_share_scopes__: { default: any };
@@ -103,6 +103,13 @@ const MFComponent = <Props extends Record<string, unknown> = Record<string, unkn
         />
     );
 };
+
+export const getMF = async ({ module, scope }: Pick<MFComponentProps<any>, 'module' | 'scope'>) =>
+    getProMF({
+        module,
+        scope,
+        shareScopes,
+    });
 
 export default MFComponent;
 ```
