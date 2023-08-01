@@ -36,7 +36,7 @@ declare global {
     }
 }
 
-export const getMFData = <
+const MFConfig = <
     RemoteEnvs extends Record<string, string>,
     RemoteName extends string,
     Dependencies extends Record<string, string>,
@@ -70,3 +70,5 @@ export const getMFData = <
         },
     };
 };
+
+export default MFConfig;

@@ -11,7 +11,7 @@ export type DevAppProps = {
 export const DevApp: React.FC = () => {
     return (
         <Routes>
-            <Route path='/test/*' element={<ProMFComponent scope='TestApp' module='./TestApp' />} />
+            <Route path='/test/*' element={<ProMFComponent scope='KTZEApp' module='./Register' />} />
             <Route path='*' element={<Navigate to='/test/*' />} />
         </Routes>
     );

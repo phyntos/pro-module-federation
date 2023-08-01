@@ -5,6 +5,16 @@ import { useStyles } from '../hooks/useStyles';
 import Center from './Center';
 import { ErrorBoundary } from './ErrorBoundary';
 
+export type MFComponentProps<T extends Record<string, unknown>> = {
+    loadingMessage?: React.ReactNode;
+    errorMessage?: React.ReactNode | ((url: string) => React.ReactNode);
+    styles?: string[];
+    scope: string;
+    props?: T;
+    module: string;
+    rootClassName?: string;
+};
+
 const MFComponent = <T extends Record<string, unknown>>({
     scope,
     props,
@@ -12,20 +22,22 @@ const MFComponent = <T extends Record<string, unknown>>({
     loadingMessage,
     errorMessage,
     module,
-}: {
-    loadingMessage?: React.ReactNode;
-    errorMessage?: React.ReactNode;
-    styles?: string[];
-    scope: string;
-    props?: T;
-    module: string;
-}): JSX.Element => {
+    rootClassName,
+}: MFComponentProps<T>): JSX.Element => {
     const { entry, url } = process.env.ProMFRemotes.find((remote) => remote.name === scope);
     const scriptStatus = useScript({ url: url + entry, scope });
     const stylesStatus = useStyles({ url, styles, scope });
     const [isFailed, Component] = useComponent({ scope, module: String(module) });
 
-    const errorNode = errorMessage || <span>Failed to load micro frontend: {url}</span>;
+    const errorNode = errorMessage ? (
+        typeof errorMessage === 'function' ? (
+            errorMessage(url)
+        ) : (
+            errorMessage
+        )
+    ) : (
+        <span>Failed to load micro frontend: {url}</span>
+    );
 
     const ready = scriptStatus === 'ready' && stylesStatus === 'ready';
     const failed = scriptStatus === 'failed' || stylesStatus === 'failed' || isFailed;
@@ -43,7 +55,7 @@ const MFComponent = <T extends Record<string, unknown>>({
     return (
         <ErrorBoundary>
             <Suspense fallback={loadingNode}>
-                <div className={'Root_' + scope}>
+                <div className={rootClassName || 'Root_' + scope}>
                     <Component {...(props || {})} />
                 </div>
             </Suspense>

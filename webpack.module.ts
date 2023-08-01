@@ -1,22 +1,22 @@
 import packageJson from './package.json';
-import { getMFData } from './src/plugin';
+import { ProMFConfig } from './src/pro-module-federation';
 const { devDependencies } = packageJson;
 
-export const { ProMFEnvironment, ProMFOptions } = getMFData({
+export const { ProMFEnvironment, ProMFOptions } = ProMFConfig({
     filename: 'devTest.js',
     name: 'DevTest',
     dependencies: devDependencies,
-    shared: ['react', 'react-dom'],
+    shared: ['react', 'react-dom', 'react-router-dom'],
     remotes: [
         {
-            name: 'TestApp',
+            name: 'KTZEApp',
             urls: {
-                LOCAL: 'http://localhost:3000/',
+                LOCAL: 'http://localhost:3222/',
             },
-            entry: 'testApp.js',
+            entry: 'entry.js',
         },
     ],
     remoteConfigs: {
-        TestApp: 'LOCAL',
+        KTZEApp: 'LOCAL',
     },
 });
