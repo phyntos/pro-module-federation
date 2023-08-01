@@ -4,7 +4,7 @@ export type LoadComponentType = {
     initialize?: () => Promise<any>;
     getContainer?: (scope: string) => Container;
     getDefaultScope?: () => any;
-    initContainer?: (defaultScope: any) => Promise<any>;
+    initContainer?: (container: Container, defaultScope: any) => Promise<any>;
     getFactory?: (container: Container, module: string) => Promise<Factory>;
     getModule?: (factory: Factory) => any;
 };
@@ -46,7 +46,7 @@ const useComponent = ({
                     ? loadComponent.getDefaultScope()
                     : __webpack_share_scopes__.default;
 
-                if (loadComponent.initContainer) await loadComponent.initContainer(defaultScope);
+                if (loadComponent.initContainer) await loadComponent.initContainer(container, defaultScope);
                 else await container.init(defaultScope);
 
                 const factory = loadComponent.getFactory
