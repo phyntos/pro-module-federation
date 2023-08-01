@@ -19,14 +19,20 @@ interface Container {
 declare const __webpack_init_sharing__: (shareScope: string) => Promise<void>;
 declare const __webpack_share_scopes__: { default: any };
 
+export type WebpackShareScopesType = { default: any };
+export type ShareScopes = WebpackShareScopesType | (() => WebpackShareScopesType | Promise<WebpackShareScopesType>);
+
 const useComponent = ({
     scope,
     module,
-    loadComponent,
+    shareScopes = async () => {
+        await __webpack_init_sharing__('default');
+        return __webpack_share_scopes__.default;
+    },
 }: {
     scope: string;
     module: string;
-    loadComponent?: LoadComponentType;
+    shareScopes?: ShareScopes;
 }) => {
     const [failed, setFailed] = useState(false);
 
@@ -34,26 +40,20 @@ const useComponent = ({
         return async () => {
             try {
                 // Initializes the share scope. This fills it with known provided modules from this build and all remotes
-                if (loadComponent.initialize) await loadComponent.initialize();
-                else await __webpack_init_sharing__('default');
+                const defaultScope = shareScopes
+                    ? typeof shareScopes === 'function'
+                        ? await shareScopes()
+                        : shareScopes
+                    : await __webpack_init_sharing__('default');
 
-                const container: Container = loadComponent.getContainer
-                    ? loadComponent.getContainer(scope)
-                    : window[scope as keyof Window]; // or get the container somewhere else
+                const container: Container = window[scope as keyof Window]; // or get the container somewhere else
 
                 // Initialize the container, it may provide shared modules
-                const defaultScope = loadComponent.getDefaultScope
-                    ? loadComponent.getDefaultScope()
-                    : __webpack_share_scopes__.default;
+                await container.init(defaultScope);
 
-                if (loadComponent.initContainer) await loadComponent.initContainer(container, defaultScope);
-                else await container.init(defaultScope);
+                const factory = await container.get(module);
 
-                const factory = loadComponent.getFactory
-                    ? await loadComponent.getFactory(container, module)
-                    : await container.get(module);
-
-                const Module = loadComponent.getModule ? loadComponent.getModule(factory) : factory();
+                const Module = factory();
                 return Module;
             } catch (error) {
                 setFailed(true);

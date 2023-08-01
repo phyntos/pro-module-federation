@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import useComponent, { LoadComponentType } from '../hooks/useComponent';
+import useComponent, { ShareScopes } from '../hooks/useComponent';
 import { useScript } from '../hooks/useScript';
 import { useStyles } from '../hooks/useStyles';
 import Center from './Center';
@@ -13,7 +13,7 @@ export type MFComponentProps<T extends Record<string, unknown>> = {
     props?: T;
     module: string;
     rootClassName?: string;
-    loadComponent?: LoadComponentType;
+    shareScopes?: ShareScopes;
 };
 
 const MFComponent = <T extends Record<string, unknown>>({
@@ -24,12 +24,12 @@ const MFComponent = <T extends Record<string, unknown>>({
     errorMessage,
     module,
     rootClassName,
-    loadComponent,
+    shareScopes,
 }: MFComponentProps<T>): JSX.Element => {
     const { entry, url } = process.env.ProMFRemotes.find((remote) => remote.name === scope);
     const scriptStatus = useScript({ url: url + entry, scope });
     const stylesStatus = useStyles({ url, styles, scope });
-    const [isFailed, Component] = useComponent({ scope, module: String(module), loadComponent });
+    const [isFailed, Component] = useComponent({ scope, module: String(module), shareScopes });
 
     const errorNode = errorMessage ? (
         typeof errorMessage === 'function' ? (
