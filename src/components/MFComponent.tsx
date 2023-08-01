@@ -1,9 +1,10 @@
 import React, { Suspense } from 'react';
-import useComponent, { ShareScopes } from '../hooks/useComponent';
+import useComponent from '../hooks/useComponent';
 import { useScript } from '../hooks/useScript';
 import { useStyles } from '../hooks/useStyles';
 import Center from './Center';
 import { ErrorBoundary } from './ErrorBoundary';
+import { ShareScopes } from '../functions/getModule';
 
 export type MFComponentProps<T extends Record<string, unknown>> = {
     loadingMessage?: React.ReactNode;

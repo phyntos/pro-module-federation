@@ -1,4 +1,5 @@
-import ProMFProvider, { useModuleFederation } from './components/MFProvider';
 import ProMFComponent from './components/MFComponent';
+import ProMFProvider, { useModuleFederation } from './components/MFProvider';
+import getMF from './functions/getMF';
 
-export { ProMFProvider, ProMFComponent, useModuleFederation as useProMF };
+export { ProMFComponent, ProMFProvider, getMF as getProMF, useModuleFederation as useProMF };
