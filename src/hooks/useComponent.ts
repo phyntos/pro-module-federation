@@ -1,4 +1,10 @@
-import { lazy, useCallback, useMemo, useState } from 'react';
+import React, { lazy, useCallback, useMemo, useState } from 'react';
+
+export type LoadComponentFC = (opt: {
+    scope: string;
+    module: string;
+    onFail?: (() => void) | undefined;
+}) => () => Promise<any>;
 
 type Factory = () => any;
 
@@ -10,10 +16,24 @@ interface Container {
 declare const __webpack_init_sharing__: (shareScope: string) => Promise<void>;
 declare const __webpack_share_scopes__: { default: any };
 
-const useComponent = ({ scope, module }: { scope: string; module: string }) => {
+const useComponent = ({
+    scope,
+    module,
+    lazyLoad,
+    loadComponent,
+}: {
+    scope: string;
+    module: string;
+    loadComponent?: LoadComponentFC;
+    lazyLoad?: typeof React.lazy;
+}) => {
     const [failed, setFailed] = useState(false);
 
-    const loadComponent = useCallback(() => {
+    const loadComponentCallback = useCallback(() => {
+        if (loadComponent) {
+            return loadComponent({ module, scope, onFail: () => setFailed(false) });
+        }
+
         return async () => {
             try {
                 // Initializes the share scope. This fills it with known provided modules from this build and all remotes
@@ -36,9 +56,16 @@ const useComponent = ({ scope, module }: { scope: string; module: string }) => {
                 return null;
             }
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scope, module]);
 
-    const Component = useMemo(() => lazy(loadComponent()), [loadComponent]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const Component = useMemo(() => {
+        if (lazyLoad) return lazyLoad(loadComponentCallback());
+
+        return lazy(loadComponentCallback());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loadComponentCallback]);
 
     return [failed, Component] as const;
 };

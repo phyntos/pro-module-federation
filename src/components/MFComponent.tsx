@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import useComponent from '../hooks/useComponent';
+import useComponent, { LoadComponentFC } from '../hooks/useComponent';
 import { useScript } from '../hooks/useScript';
 import { useStyles } from '../hooks/useStyles';
 import Center from './Center';
@@ -13,6 +13,8 @@ export type MFComponentProps<T extends Record<string, unknown>> = {
     props?: T;
     module: string;
     rootClassName?: string;
+    loadComponent?: LoadComponentFC;
+    lazyLoad?: typeof React.lazy;
 };
 
 const MFComponent = <T extends Record<string, unknown>>({
@@ -23,11 +25,13 @@ const MFComponent = <T extends Record<string, unknown>>({
     errorMessage,
     module,
     rootClassName,
+    lazyLoad,
+    loadComponent,
 }: MFComponentProps<T>): JSX.Element => {
     const { entry, url } = process.env.ProMFRemotes.find((remote) => remote.name === scope);
     const scriptStatus = useScript({ url: url + entry, scope });
     const stylesStatus = useStyles({ url, styles, scope });
-    const [isFailed, Component] = useComponent({ scope, module: String(module) });
+    const [isFailed, Component] = useComponent({ scope, module: String(module), loadComponent, lazyLoad });
 
     const errorNode = errorMessage ? (
         typeof errorMessage === 'function' ? (
