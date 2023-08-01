@@ -1,6 +1,6 @@
 import packageJson from './package.json';
-import { ProMFConfig } from './src/pro-module-federation';
 const { devDependencies } = packageJson;
+import { ProMFConfig } from './src/plugin';
 
 export const { ProMFEnvironment, ProMFOptions } = ProMFConfig({
     filename: 'devTest.js',
