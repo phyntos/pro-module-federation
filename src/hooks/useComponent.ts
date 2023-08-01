@@ -1,10 +1,13 @@
-import React, { lazy, useCallback, useMemo, useState } from 'react';
+import { lazy, useCallback, useMemo, useState } from 'react';
 
-export type LoadComponentFC = (opt: {
-    scope: string;
-    module: string;
-    onFail?: (() => void) | undefined;
-}) => () => Promise<any>;
+export type LoadComponentType = {
+    initialize?: () => Promise<any>;
+    getContainer?: (scope: string) => Container;
+    getDefaultScope?: () => any;
+    initContainer?: (defaultScope: any) => Promise<any>;
+    getFactory?: (container: Container, module: string) => Promise<Factory>;
+    getModule?: (factory: Factory) => any;
+};
 
 type Factory = () => any;
 
@@ -19,36 +22,38 @@ declare const __webpack_share_scopes__: { default: any };
 const useComponent = ({
     scope,
     module,
-    lazyLoad,
     loadComponent,
 }: {
     scope: string;
     module: string;
-    loadComponent?: LoadComponentFC;
-    lazyLoad?: typeof React.lazy;
+    loadComponent?: LoadComponentType;
 }) => {
     const [failed, setFailed] = useState(false);
 
     const loadComponentCallback = useCallback(() => {
-        if (loadComponent) {
-            return loadComponent({ module, scope, onFail: () => setFailed(false) });
-        }
-
         return async () => {
             try {
                 // Initializes the share scope. This fills it with known provided modules from this build and all remotes
-                await __webpack_init_sharing__('default');
+                if (loadComponent.initialize) await loadComponent.initialize();
+                else await __webpack_init_sharing__('default');
 
-                const container: Container = window[scope as keyof Window]; // or get the container somewhere else
+                const container: Container = loadComponent.getContainer
+                    ? loadComponent.getContainer(scope)
+                    : window[scope as keyof Window]; // or get the container somewhere else
 
                 // Initialize the container, it may provide shared modules
-                const defaultScope = __webpack_share_scopes__.default;
+                const defaultScope = loadComponent.getDefaultScope
+                    ? loadComponent.getDefaultScope()
+                    : __webpack_share_scopes__.default;
 
-                await container.init(defaultScope);
+                if (loadComponent.initContainer) await loadComponent.initContainer(defaultScope);
+                else await container.init(defaultScope);
 
-                const factory = await container.get(module);
+                const factory = loadComponent.getFactory
+                    ? await loadComponent.getFactory(container, module)
+                    : await container.get(module);
 
-                const Module = factory();
+                const Module = loadComponent.getModule ? loadComponent.getModule(factory) : factory();
                 return Module;
             } catch (error) {
                 setFailed(true);
@@ -59,13 +64,7 @@ const useComponent = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scope, module]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const Component = useMemo(() => {
-        if (lazyLoad) return lazyLoad(loadComponentCallback());
-
-        return lazy(loadComponentCallback());
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loadComponentCallback]);
+    const Component = useMemo(() => lazy(loadComponentCallback()), [loadComponentCallback]);
 
     return [failed, Component] as const;
 };
