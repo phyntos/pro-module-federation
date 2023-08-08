@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Center: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Center: React.FC<{ children: React.ReactNode; style?: React.CSSProperties }> = ({ children, style }) => {
     return (
         <div
             style={{
@@ -9,6 +9,7 @@ const Center: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                ...style,
             }}
         >
             {children}

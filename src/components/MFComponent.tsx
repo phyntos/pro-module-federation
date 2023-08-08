@@ -15,6 +15,8 @@ export type MFComponentProps<T extends Record<string, unknown>> = {
     module: string;
     rootClassName?: string;
     shareScopes?: ShareScopes;
+    loadingStyle?: React.CSSProperties;
+    errorStyle?: React.CSSProperties;
 };
 
 const MFComponent = <T extends Record<string, unknown>>({
@@ -26,6 +28,8 @@ const MFComponent = <T extends Record<string, unknown>>({
     module,
     rootClassName,
     shareScopes,
+    errorStyle,
+    loadingStyle,
 }: MFComponentProps<T>): JSX.Element => {
     const { entry, url } = process.env.ProMFRemotes.find((remote) => remote.name === scope);
     const scriptStatus = useScript({ url: url + entry, scope });
@@ -46,13 +50,13 @@ const MFComponent = <T extends Record<string, unknown>>({
     const failed = scriptStatus === 'failed' || stylesStatus === 'failed' || isFailed;
 
     if (failed) {
-        return <Center>{errorNode}</Center>;
+        return <Center style={errorStyle}>{errorNode}</Center>;
     }
 
     const loadingNode = loadingMessage || <span>Loading micro frontend: {url}</span>;
 
     if (!ready) {
-        return <Center>{loadingNode}</Center>;
+        return <Center style={loadingStyle}>{loadingNode}</Center>;
     }
 
     return (
