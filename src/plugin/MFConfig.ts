@@ -4,6 +4,9 @@ type RemoteType<RemoteName extends string, RemoteEnvs extends Record<string, str
     entry: string;
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+export declare type UnionWithString<Union extends string> = (string & {}) | Union;
+
 export type ProMFOptions<
     RemoteEnvs extends Record<string, string>,
     RemoteName extends string,
@@ -14,7 +17,8 @@ export type ProMFOptions<
     remotes: RemoteType<RemoteName, RemoteEnvs>[];
     remoteConfigs: Record<RemoteName, Extract<keyof RemoteEnvs, string>>;
     dependencies: Dependencies;
-    shared: (keyof Dependencies)[];
+    shared: UnionWithString<Extract<keyof Dependencies, string>>[];
+    exposes: Record<string, string>;
 };
 
 export type Remote<RemoteKey extends string, ModuleKey extends string = string> = Record<
@@ -60,6 +64,7 @@ const MFConfig = <
                     [remote.name]: remote.name + '@' + remote.urls[options.remoteConfigs[remote.name]] + remote.entry,
                 };
             }, {}),
+            exposes: options.exposes,
         },
         ProMFEnvironment: {
             ProMFRemotes: options.remotes.map((remote) => ({
