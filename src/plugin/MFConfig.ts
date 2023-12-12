@@ -16,9 +16,9 @@ export type ProMFOptions<
     filename: string;
     remotes: RemoteType<RemoteName, RemoteEnvs>[];
     remoteConfigs: Record<RemoteName, Extract<keyof RemoteEnvs, string>>;
-    dependencies: Dependencies;
-    shared: UnionWithString<Extract<keyof Dependencies, string>>[];
-    exposes: Record<string, string>;
+    dependencies?: Dependencies;
+    shared?: UnionWithString<Extract<keyof Dependencies, string>>[];
+    exposes?: Record<string, string>;
 };
 
 export type Remote<RemoteKey extends string, ModuleKey extends string = string> = Record<
@@ -49,7 +49,7 @@ const MFConfig = <
 ) => {
     return {
         ProMFOptions: {
-            shared: options.shared.reduce(
+            shared: options.shared?.reduce(
                 (shared, key) => ({
                     ...shared,
                     [key]: { singleton: true, requiredVersion: options.dependencies[key] },
